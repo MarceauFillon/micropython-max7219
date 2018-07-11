@@ -2,6 +2,8 @@
 
 from micropython import const
 import framebuf
+from utime import sleep_ms
+import uasyncio as asyncio
 
 _NOOP = const(0)
 _DIGIT0 = const(1)
@@ -41,7 +43,6 @@ class Matrix8x8:
         self.line = fb.line  # (x1, y1, x2, y2, col)
         self.rect = fb.rect  # (x, y, w, h, col)
         self.fill_rect = fb.fill_rect  # (x, y, w, h, col)
-        self.scroll = fb.scroll  # (dx, dy)
         self.blit = fb.blit  # (fbuf, x, y[, key])
         self.init()
 
@@ -82,7 +83,6 @@ class Matrix8x8:
     # users don't have to pay for the imports unless they want the
     # functionality.
 
-    from utime import sleep_ms
     def scroll(self, text, delay=10, distance=None, prefix='  '):
         ''' Scrolls text distance pixels to the left with delay ms between
         rendering each frame. Prefix is intended to give the user a chance
@@ -94,7 +94,6 @@ class Matrix8x8:
             self.text(text, -i)
             sleep_ms(delay)
 
-    import uasyncio as asyncio
     async def async_scroll(self, text, delay=10, distance=None, prefix='  '):
         ''' Scrolls text distance pixels to the left with delay ms between
         rendering each frame. Prefix is intended to give the user a chance
