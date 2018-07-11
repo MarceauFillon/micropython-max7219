@@ -41,7 +41,6 @@ class Matrix8x8:
         self.line = fb.line  # (x1, y1, x2, y2, col)
         self.rect = fb.rect  # (x, y, w, h, col)
         self.fill_rect = fb.fill_rect  # (x, y, w, h, col)
-        self.text = fb.text  # (string, x, y, col=1)
         self.scroll = fb.scroll  # (dx, dy)
         self.blit = fb.blit  # (fbuf, x, y[, key])
         self.init()
@@ -61,6 +60,11 @@ class Matrix8x8:
             (_SHUTDOWN, 1),
         ):
             self._write(command, data)
+
+    def text(self, message, xpos=0, ypos=0, color=1):
+        self.fill(0)
+        self.framebuf.text(message, xpos, ypos, color)
+        self.show()
 
     def brightness(self, value):
         if not 0 <= value <= 15:
