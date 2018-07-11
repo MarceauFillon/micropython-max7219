@@ -77,3 +77,31 @@ class Matrix8x8:
             for m in range(self.num):
                 self.spi.write(bytearray([_DIGIT0 + y, self.buffer[(y * self.num) + m]]))
             self.cs(1)
+
+    # The following two functions should be carved out into another file so
+    # users don't have to pay for the imports unless they want the
+    # functionality.
+
+    from utime import sleep_ms
+    def scroll(self, text, delay=10, distance=None, prefix='  '):
+        ''' Scrolls text distance pixels to the left with delay ms between
+        rendering each frame. Prefix is intended to give the user a chance
+        to see the text before it is slid off. '''
+        text = prefix + text
+        if not distance:
+            distance = len(text) * 8
+        for i in range(distance):
+            self.text(text, -i)
+            sleep_ms(delay)
+
+    import uasyncio as asyncio
+    async def async_scroll(self, text, delay=10, distance=None, prefix='  '):
+        ''' Scrolls text distance pixels to the left with delay ms between
+        rendering each frame. Prefix is intended to give the user a chance
+        to see the text before it is slid off. '''
+        text = prefix + text
+        if not distance:
+            distance = len(text) * 8
+        for i in range(distance):
+            self.text(text, -i)
+            await asyncio.sleep_ms(delay)
