@@ -2,7 +2,7 @@
 
 A MicroPython library for the MAX7219 8x8 LED matrix driver, SPI interface, supports cascading and uses [framebuf](http://docs.micropython.org/en/latest/pyboard/library/framebuf.html)
 
-## PyBoard Examples
+## Examples
 
 **Single 8x8 LED Matrix**
 
@@ -10,6 +10,7 @@ A MicroPython library for the MAX7219 8x8 LED matrix driver, SPI interface, supp
 import max7219
 from machine import Pin, SPI
 spi = SPI(1)
+
 display = max7219.Matrix8x8(spi, Pin('X5'), 1)
 display.text('1',0,0,1)
 display.show()
@@ -100,6 +101,29 @@ D7 MOSI (GPIO13) | DIN
 D8 CS (GPIO15)   | CS
 D5 SCK (GPIO14)  | CLK
 
+## Mocks for testing
+
+Hardware can be mocked out and a _fake_ MAX7219 can render the LED matrix output to a terminal. This is particularly useful in conjunction with a MicroPython docker container.
+
+```
+❯ docker run -ti --rm -v $(pwd):/code -w /code micropython/unix:v1.17
+MicroPython v1.17 on 2021-12-15; linux version
+Use Ctrl-D to exit, Ctrl-E for paste mode
+>>> import max7219
+>>> from mock.machine import FakeMax7219, MockPin
+>>> fakespi = FakeMax7219(4)
+>>> fakecs = MockPin('cs')
+>>> display = max7219.Matrix8x8(fakespi, fakecs, 4)
+>>> display.text("fake")
+   ███           ██
+  ██ ██          ██
+  ██      ████   ██  ██   ████
+ ████        ██  ██ ██   ██  ██
+  ██      █████  ████    ██████
+  ██     ██  ██  █████   ██
+  ██      █████  ██  ██   █████
+>>>
+```
 ## Links
 
 * Based on [deshipu's max7219.py](https://bitbucket.org/thesheep/micropython-max7219/src)
