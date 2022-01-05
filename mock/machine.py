@@ -83,11 +83,11 @@ class FakeMax7219(MockSPI):
                     if buf[0] == 8:
                         self.displayLeds()
     
-    def _print_unit_row(b):
+    def _print_unit_row(self, b):
         print('{:08b}'.format(b).replace('0', self.on_char).replace('1', self.off_char), end='')
 
     def displayLeds(self):
         for row in range(8):
             for unit in range(self.num):
-                FakeMax7219._print_unit_row(self.buffer[row * self.num + unit])
+                self._print_unit_row(self.buffer[row * self.num + unit])
             print()
